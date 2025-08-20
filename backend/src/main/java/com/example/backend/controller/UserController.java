@@ -1,20 +1,22 @@
 package com.example.backend.controller;
-import com.example.backend.service.JwtService;
-import com.example.backend.service.UserService;
-
+import java.security.Principal;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.example.backend.dto.RegisterRequest;
-import com.example.backend.model.User;
-import com.example.backend.repository.UserRepository;
-import com.example.backend.response.LoginResponse;
 import com.example.backend.dto.LoginRequest;
+import com.example.backend.model.User;
+import com.example.backend.response.LoginResponse;
+import com.example.backend.service.JwtService;
+import com.example.backend.service.UserService;
 
 @RestController
 public class UserController {
@@ -25,13 +27,13 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/api/login")
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+    @PostMapping("/auth/login")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginDto) {
-
+    
 		User user = userService.loginUser(loginDto);
 		
-		String jwtToken = jwtService.generateToken(new HashMap<>(), user);
+    String jwtToken = jwtService.generateToken(new HashMap<>(), user);
 		
 		LoginResponse loginResponse = new LoginResponse();
 		
@@ -41,7 +43,7 @@ public class UserController {
 		return ResponseEntity.ok(loginResponse);
     }
 
-    @PostMapping("/api/register")
+    @PostMapping("/auth/register")
     @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<User> postMethodName(@RequestBody User user) {
 		
@@ -52,9 +54,12 @@ public class UserController {
 	}
 
     @GetMapping("/api/deleteme")
-    @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<?> deleteMe() {
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+    public ResponseEntity<?> deleteMe(Principal principal) {
         
+        // get logged in user
+        String username = principal.getName();
+        userService.deleteUser(username);
         return ResponseEntity.ok().body("User deleted");
     }
     

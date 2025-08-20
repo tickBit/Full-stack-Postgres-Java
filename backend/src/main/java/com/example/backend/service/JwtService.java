@@ -23,10 +23,8 @@ public class JwtService {
 	 
     @Value("${security.jwt.expiration-time}")
 	private long jwtExpiration;
-	 
-	 
-	 
-	 public long getExpirationTime() {
+	
+	public long getExpirationTime() {
 		 return jwtExpiration;
 	 }
 	 public String extractUsername(String token) {
@@ -85,6 +83,5 @@ public class JwtService {
 	 public Key getSignKey() {
 		 byte [] keyBytes = Decoders.BASE64.decode(secretKey);
 		 return Keys.hmacShaKeyFor(keyBytes);
-	 }	 
-
+	 }
 }

@@ -12,8 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
-	
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(nullable = false)
@@ -66,7 +65,6 @@ public class User implements UserDetails {
 
 	
 	public User(String username, String email, String password) {
-		super();
 		this.username = username;
 		this.email = email;
 		this.password = password;

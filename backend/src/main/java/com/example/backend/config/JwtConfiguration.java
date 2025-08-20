@@ -14,38 +14,34 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.example.backend.repository.UserRepository;
 
 @Configuration
-public class JwtConfiguration {
+public class JWTConfiguration {
 	
-	@Autowired
-	private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepo;
 	
-	@Bean
-	UserDetailsService userDetailsService() {
-		return userName -> userRepository.findByUsername(userName)
-				.orElseThrow(() -> new UsernameNotFoundException("user not found"));
-	}
+    @Bean
+    UserDetailsService userDetailsService() {
+        return username -> userRepo.findByUsername(username)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
 	
-	@Bean
-	BCryptPasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-	
-	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-		return config.getAuthenticationManager();
-	}
-	
-	@Bean
-	AuthenticationProvider authenticationProvider () {
-		
-		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-		
-		authProvider.setUserDetailsService(userDetailsService());
-		authProvider.setPasswordEncoder(passwordEncoder());
-		
-		return authProvider;
-		
-	}
+    @Bean
+    BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+    @Bean
+    AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setPasswordEncoder(passwordEncoder());
+
+        return authProvider;
+    }
 
 }

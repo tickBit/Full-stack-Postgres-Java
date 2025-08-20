@@ -10,21 +10,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
-public class JWTAuthenticationEntiryPoint extends OncePerRequestFilter{
-	
-	
+public class JWTAuthenticationEntryPoint extends OncePerRequestFilter {
 
-	@Autowired
+    @Autowired
 	private JwtService jwtService;
 	
 	@Autowired
@@ -37,7 +33,7 @@ public class JWTAuthenticationEntiryPoint extends OncePerRequestFilter{
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		
-		final String authHeader = request.getHeader("Autherization");
+		final String authHeader = request.getHeader("Authorization");
 		
 		//check authHearder null or not 
 		if(authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -48,13 +44,13 @@ public class JWTAuthenticationEntiryPoint extends OncePerRequestFilter{
 		try {
 			final String jwtToken = authHeader.substring(7);
 			
-			final String username = jwtService.extractUsername(jwtToken);
+			final String userEmail = jwtService.extractUsername(jwtToken);
 			
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			
-			if(username != null && authentication == null) {
+			if(userEmail != null && authentication == null) {
 				
-				UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+				UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
 				
 				if(jwtService.isTokenValid(jwtToken, userDetails)) {
 					
@@ -74,5 +70,4 @@ public class JWTAuthenticationEntiryPoint extends OncePerRequestFilter{
 		}
 		
 	}
-
 }
