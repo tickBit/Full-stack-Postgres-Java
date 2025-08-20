@@ -29,15 +29,15 @@ public class UserService {
 	
 	public User signup(User userData) {
 		userData.setPassword(passwordEncoder.encode(userData.getPassword()));
-		
+
 		return userRepository.save(userData);
 	}
 	
 	public User loginUser(LoginRequest loginDto) {
 		
-		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
+		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
 		
-		return userRepository.findByEmail(loginDto.getEmail())
+		return userRepository.findByUsername(loginDto.getUsername())
 				.orElseThrow();
 	}
 	

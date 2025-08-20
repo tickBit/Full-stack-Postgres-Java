@@ -14,15 +14,19 @@ import java.util.List;
 public class User implements UserDetails {
 	
 	
-	   @Id
-	   @GeneratedValue(strategy = GenerationType.AUTO)
-	   @Column(nullable = false)
-	   private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(nullable = false)
+	private Integer id;
 
-	   private String username;
-	   private String email;
-	   private String password;
-	   
+    @Column(unique = true, nullable = false)
+	private String username;
+
+    @Column(nullable = false)
+	private String password;
+	
+    private String email;
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return List.of();
@@ -37,33 +41,32 @@ public class User implements UserDetails {
 	@Override
 	public String getUsername() {
 		
-		return email;
+		return username;
 	}
 	
-	  @Override
-	   public boolean isAccountNonExpired() {
-	       return true;
-	   }
+	@Override
+	public boolean isAccountNonExpired() {
+	    return true;
+    }
 	  
-	   @Override
-	   public boolean isAccountNonLocked() {
-	       return true;
-	   }
+	@Override
+	public boolean isAccountNonLocked() {
+	    return true;
+	}
 	   
-	   @Override
-	   public boolean isCredentialsNonExpired() {
-	       return true;
-	   }
+	@Override
+	public boolean isCredentialsNonExpired() {
+	    return true;
+	}
 	   
-	   @Override
-	   public boolean isEnabled() {
-	       return true;
-	   }
+	@Override
+	public boolean isEnabled() {
+	    return true;
+	}
 
 	
-	public User(Integer id, String username, String email, String password) {
+	public User(String username, String email, String password) {
 		super();
-		this.id = id;
 		this.username = username;
 		this.email = email;
 		this.password = password;
@@ -79,14 +82,13 @@ public class User implements UserDetails {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public String getUserName() {
-		return username;
-	}
-	public void setUsername(String name) {
-		this.username = name;
-	}
+	
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
 	public String getEmail() {
-		return email;
+		return this.email;
 	}
 	public void setEmail(String email) {
 		this.email = email;

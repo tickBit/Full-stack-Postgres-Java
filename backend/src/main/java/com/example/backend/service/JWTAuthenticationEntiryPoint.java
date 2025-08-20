@@ -48,13 +48,13 @@ public class JWTAuthenticationEntiryPoint extends OncePerRequestFilter{
 		try {
 			final String jwtToken = authHeader.substring(7);
 			
-			final String userEmail = jwtService.extractUsername(jwtToken);
+			final String username = jwtService.extractUsername(jwtToken);
 			
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			
-			if(userEmail != null && authentication == null) {
+			if(username != null && authentication == null) {
 				
-				UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+				UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 				
 				if(jwtService.isTokenValid(jwtToken, userDetails)) {
 					

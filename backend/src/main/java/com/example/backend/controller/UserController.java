@@ -27,7 +27,7 @@ public class UserController {
 
     @PostMapping("/api/login")
     @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
-    public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest loginDto) {
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginDto) {
 
 		User user = userService.loginUser(loginDto);
 		
