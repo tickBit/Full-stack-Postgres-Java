@@ -60,31 +60,44 @@ function UploadForm() {
         formData.append("file", file);
         formData.append("description", description);
   
-        console.log(token);
-
-        const response = await axios.post("http://localhost:8080/api/upload",
-            formData, {
+        try {
+            const response = await axios.post(
+                "http://localhost:8080/api/upload",
+                    formData,
+            {
                 headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "multipart/form-data"
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "multipart/form-data"
                 },
                 withCredentials: true
-                }
-        )
-.then(res => {
-    if (res.data.success) {
-            } else {
-                console.error(response.data.message);
             }
-  
-  dispatch(uploadPic(res.data));
+        );
 
-})
-.catch(err => {
-  console.error("Upload failed:", err.response?.data || err.message);
-});
+        // Vastauksen käsittely
+        if (response.status === 200) {
+            //uploadPic(token, response.data)
+            console.log("Upload successful:", response.data); 
+            // response.data on yleensä "Image uploaded!" tms.
+        } else {
+            console.warn("Unexpected status:", response.status);
+        }
 
-}
+    } catch (error) {
+        // Virheenkäsittely
+        if (error.response) {
+            // Serveriltä tuli virhe
+            console.error("Server responded with error:", error.response.status, error.response.data);
+        } else if (error.request) {
+            // Pyyntö meni läpi mutta ei tullut vastausta
+            console.error("No response received:", error.request);
+        } else {
+            // Muu virhe pyyntöä tehdessä
+            console.error("Error creating request:", error.message);
+        }
+    }
+
+
+  }
 
 
 return (<>

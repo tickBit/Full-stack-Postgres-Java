@@ -71,9 +71,9 @@ function MainView() {
 
                     <div className='picture-area'>
 
-                    {!isLoading && pics ? (<div>
+                    {!isLoading ? (<div>
 
-                        {pics.length > 0 ? (
+                        {pics & pics.length > 0 ? (
                                 pics.map((picture) => {
                                                     
                                         return (<div className='picture' key={'_'+picture.id}>
