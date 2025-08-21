@@ -61,7 +61,7 @@ function UploadForm() {
         formData.append("description", description);
   
         console.log(token);
-        
+
         const response = await axios.post("http://localhost:8080/api/upload",
             formData, {
                 headers: {
