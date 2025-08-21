@@ -44,9 +44,12 @@ public class UserController {
     }
 
     @PostMapping("/auth/register")
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
-    public ResponseEntity<User> postMethodName(@RequestBody User user) {
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<?> registerUser(@RequestBody User user, Principal p) {
 		
+    if (p != null) {
+      return ResponseEntity.status(401).body("Please log out first");
+    }
 		User user2 = userService.signup(user);
 		
 		return ResponseEntity.ok(user2);
