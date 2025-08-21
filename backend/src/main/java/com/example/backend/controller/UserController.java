@@ -1,11 +1,8 @@
 package com.example.backend.controller;
 import java.security.Principal;
-import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,25 +30,25 @@ public class UserController {
     
 		User user = userService.loginUser(loginDto);
 		
-    String jwtToken = jwtService.generateToken(new HashMap<>(), user);
+    String jwtToken = jwtService.generateToken(user);
 		
 		LoginResponse loginResponse = new LoginResponse();
 		
 		loginResponse.setToken(jwtToken);
-		loginResponse.setTokenExpireTime(jwtService.getExpirationTime());
 		
 		return ResponseEntity.ok(loginResponse);
     }
 
     @PostMapping("/auth/register")
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<?> registerUser(@RequestBody User user, Principal p) {
 		
       if (p != null) {
         return ResponseEntity.status(401).body("Please log out first");
       }
 		  
-      if (userService.userExists(user)) return ResponseEntity.status(401).body("Users exists by that name");
+      String username = user.getUsername();
+      if (userService.userExists(username)) return ResponseEntity.status(401).body("User exists by that name");
       
       User user2 = userService.signup(user);
 		

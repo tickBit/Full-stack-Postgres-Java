@@ -1,7 +1,6 @@
 package com.example.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,9 +29,9 @@ public class UserService {
 		return userRepository.save(userData);
 	}
 	
-	public boolean userExists(User user) {
-		String username = user.getUsername();
-		if (userRepository.findByUsername(username) != null) return true; else return false;
+	public boolean userExists(String username) {
+		
+		if ((userRepository.findByUsername(username)).isPresent()) return true; else return false;
 	}
 
 	public User loginUser(LoginRequest loginDto) {
