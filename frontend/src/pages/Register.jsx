@@ -25,14 +25,12 @@ function Register() {
         }
 
         try {
-            const response = await axios.post(`http://localhost:8080/register`, {
+            const response = await axios.post(`http://localhost:8080/auth/register`, {
                 username,
                 password,
-                email},{
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                withCredentials: true});
+                email}, {
+                  headers: { "Content-Type": "application/json" }
+                });
             
             // Handle successful registration
             // log in after successful registration
