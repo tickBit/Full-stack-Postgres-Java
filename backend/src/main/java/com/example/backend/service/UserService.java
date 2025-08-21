@@ -49,6 +49,11 @@ public class UserService {
 		userRepository.delete(user);
 	}
 
+	// get particular user
+	public User getUser(String username) {
+		return userRepository.findByUsername(username).orElse(null);
+	}
+
     public Iterable<User> getAllUsers() {
 		return userRepository.findAll();		
 	}

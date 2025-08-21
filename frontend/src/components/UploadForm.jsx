@@ -60,14 +60,16 @@ function UploadForm() {
         formData.append("file", file);
         formData.append("description", description);
   
-        const response = await axios.post("http://localhost:8080/upload",
+        console.log(token);
+        
+        const response = await axios.post("http://localhost:8080/api/upload",
             formData, {
                 headers: {
                     "Authorization": `Bearer ${token}`,
                     "Content-Type": "multipart/form-data"
                 },
                 withCredentials: true
-            }
+                }
         )
 .then(res => {
     if (res.data.success) {
@@ -81,6 +83,7 @@ function UploadForm() {
 .catch(err => {
   console.error("Upload failed:", err.response?.data || err.message);
 });
+
 }
 
 
