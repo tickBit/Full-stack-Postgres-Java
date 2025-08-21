@@ -47,12 +47,15 @@ public class UserController {
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> registerUser(@RequestBody User user, Principal p) {
 		
-    if (p != null) {
-      return ResponseEntity.status(401).body("Please log out first");
-    }
-		User user2 = userService.signup(user);
+      if (p != null) {
+        return ResponseEntity.status(401).body("Please log out first");
+      }
+		  
+      if (userService.userExists(user)) return ResponseEntity.status(401).body("Users exists by that name");
+      
+      User user2 = userService.signup(user);
 		
-		return ResponseEntity.ok(user2);
+		  return ResponseEntity.ok(user2);
 		
 	}
 
