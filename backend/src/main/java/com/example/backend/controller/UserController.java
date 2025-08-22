@@ -40,7 +40,7 @@ public class UserController {
     }
 
     @PostMapping("/auth/register")
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> registerUser(@RequestBody User user, Principal p) {
 		
       if (p != null) {
@@ -57,7 +57,7 @@ public class UserController {
 	}
 
     @GetMapping("/api/deleteme")
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> deleteMe(Principal principal) {
         
         // get logged in user
