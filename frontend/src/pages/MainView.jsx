@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react';
 import {useNavigate} from 'react-router';
 import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
 
 import { fetchPics, reset } from '../features/pics/picSlice'; // import the thunk
 import UploadForm from '../components/UploadForm';
 import { useAuth } from '../AuthContext';
 import Spinner from '../components/Spinner';
 import PleaseLogin from '../components/PleaseLogin';
+
 
 function MainView() {
 
@@ -17,7 +19,7 @@ function MainView() {
     const { isLoggedIn, username, token } = useAuth();
     const [ menuVisible, setMenuVisible ] = useState(false);
     const [ picId, setPicId ] = useState(-1);
-    const { pics, isLoading } = useSelector((state) => state.pic);
+    const { pics, isLoading, isError } = useSelector((state) => state.pic);
 
     const toggleMenu = (id) => {
         setPicId(id);
@@ -49,15 +51,13 @@ function MainView() {
                     console.log(err);
                 })
             }
-    
-
 
 
     useEffect(() => {
-
+        
         if (isLoggedIn) {
-
             dispatch(fetchPics(token));
+            
         } else {
             navigate('/');
         }
@@ -107,6 +107,7 @@ function MainView() {
                             
                         }</>   ) : (<Spinner />)
                     }
+                    {isError ? <p>Perhaps token expired. Please log out and the log in again</p> : <></>}
                     </div>
                     </div>
                     ) : (<PleaseLogin />)}

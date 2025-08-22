@@ -5,8 +5,14 @@ import com.example.backend.model.User;
 import com.example.backend.service.ImageService;
 import com.example.backend.service.UserService;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +24,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true") // frontend URL
+@CrossOrigin(origins = "http://localhost:3000") // frontend URL
 public class ImageController {
 
     private final ImageService imageService;
@@ -35,6 +41,8 @@ public class ImageController {
             @RequestParam("description") String description,
             Principal principal
     ) throws IOException {
+
+        if (principal == null) return ResponseEntity.status(403).body("Forbidden -- perhaps token expired");
 
         String username = principal.getName();
         User user = userService.getUser(username);
@@ -55,4 +63,5 @@ public class ImageController {
         
         imageService.deletePicById(id);
     }
+    
 }

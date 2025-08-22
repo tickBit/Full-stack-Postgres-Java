@@ -47,23 +47,24 @@ const picSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchPics.pending, (state) => {
-        state.isLoading = true;
-        state.isError = false;
-        state.isSuccess = false;
-        state.error = '';
+        state.isLoading = true
+        state.isError = false
+        state.isSuccess = false
+        state.error = ''
       })
       .addCase(fetchPics.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.isSuccess = true;
-        state.pics = action.payload;
+        state.isLoading = false
+        state.isError = false
+        state.error = ''
+        state.isSuccess = true
+        state.pics = action.payload
       })
       .addCase(fetchPics.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.isSuccess = false;
-        state.error = action.payload || 'Failed to fetch pics';
-        state.pics = [];
+        state.isLoading = false
+        state.isError = true
+        state.isSuccess = false
+        state.error = action.payload || 'Failed to fetch pics'
+        state.pics = []
       });
   },
 });

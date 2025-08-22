@@ -73,6 +73,9 @@ function UploadForm() {
             dispatch(uploadPic(res.data));
             console.log("Success!")
         }).catch((err) => {
+            if (err.status === 401 || err.status === 403) {
+                toast("Token expired! Please log out and then log in again.")
+            }
             console.log(err);
         });
   }
