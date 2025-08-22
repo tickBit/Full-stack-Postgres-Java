@@ -21,27 +21,23 @@ function MainView() {
     async function deletePic(e, id) {
         if (!isLoggedIn) return;
 
-        try {
-            const response = await axios.delete(`http://localhost:8080/api/deletePic/${id}`, {
+            await axios.delete(`http://localhost:8080/api/deletePic/${id}`, {
                 headers: {
                     "Authorization": `Bearer ${token}`,
                 }
-            });
+            }).then((res) => {
 
-            if (response.data.success) {
+                console.log(res);
 
                 // Remove picture from state of Redux
                 dispatch({
                     type: 'pic/deleteOne',
                     payload: id
-                });
-            } else {
-                console.error(response.data.message);
+                })}).catch((err) => {
+                    console.log(err);
+                })
             }
-        } catch (err) {
-            console.error(err);
-        }
-    }
+    
 
 
 
@@ -50,7 +46,6 @@ function MainView() {
         if (isLoggedIn) {
 
             dispatch(fetchPics(token));
-            console.log(pics, pics.length);
 
         } else {
             navigate('/');

@@ -32,4 +32,7 @@ public class ImageService {
         return imageRepository.findByUserId(user.getId());
     }
 
+    public void deletePicById(Long id) {
+        imageRepository.deleteById(id);
+    }
 }

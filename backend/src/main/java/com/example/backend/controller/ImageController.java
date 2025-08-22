@@ -4,6 +4,9 @@ import com.example.backend.model.Image;
 import com.example.backend.model.User;
 import com.example.backend.service.ImageService;
 import com.example.backend.service.UserService;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,4 +50,9 @@ public class ImageController {
         return imageService.getUserPics(username);
     }
     
+    @DeleteMapping("/deletePic/{id}")
+    public void deletepic(@PathVariable("id") Long id) {
+        
+        imageService.deletePicById(id);
+    }
 }
