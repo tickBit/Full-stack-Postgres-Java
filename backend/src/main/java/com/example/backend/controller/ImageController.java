@@ -30,7 +30,7 @@ public class ImageController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadImg(
+    public ResponseEntity<?> uploadImg(
             @RequestParam("file") MultipartFile file,
             @RequestParam("description") String description,
             Principal principal
@@ -39,9 +39,9 @@ public class ImageController {
         String username = principal.getName();
         User user = userService.getUser(username);
 
-        imageService.uploadImage(file.getBytes(), description, user);
+        Image img = imageService.uploadImage(file.getBytes(), description, user);
 
-        return ResponseEntity.ok("Upload successful");
+        return ResponseEntity.ok(img);
     }
 
     @GetMapping("/getUserPics")

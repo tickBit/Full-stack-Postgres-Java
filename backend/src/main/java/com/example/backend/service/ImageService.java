@@ -22,9 +22,10 @@ public class ImageService {
         this.imageRepository = imageRepository;
     }
 
-    public void uploadImage(byte[] img, String description, User user) {
+    public Image uploadImage(byte[] img, String description, User user) {
         Image image = new Image(img, description, user);
         imageRepository.save(image);
+        return image;
     }
 
     public List<Image> getUserPics(String username) {

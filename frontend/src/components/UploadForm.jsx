@@ -59,9 +59,8 @@ function UploadForm() {
         const formData = new FormData();
         formData.append("file", file);
         formData.append("description", description);
-  
-        try {
-            const response = await axios.post(
+
+        await axios.post(
                 "http://localhost:8080/api/upload",
                     formData,
             {
@@ -69,32 +68,13 @@ function UploadForm() {
                 "Authorization": `Bearer ${token}`
                 }
             }
-        );
-
-        // Vastauksen käsittely
-        if (response.status === 200) {
-            //uploadPic(token, response.data)
-            console.log("Upload successful:", response.data); 
-            // response.data on yleensä "Image uploaded!" tms.
-        } else {
-            console.warn("Unexpected status:", response.status);
-        }
-
-    } catch (error) {
-        // Virheenkäsittely
-        if (error.response) {
-            // Serveriltä tuli virhe
-            console.error("Server responded with error:", error.response.status, error.response.data);
-        } else if (error.request) {
-            // Pyyntö meni läpi mutta ei tullut vastausta
-            console.error("No response received:", error.request);
-        } else {
-            // Muu virhe pyyntöä tehdessä
-            console.error("Error creating request:", error.message);
-        }
-    }
-
-
+        ).then(res => {
+            console.log(res.data);
+            dispatch(uploadPic(res.data));
+            console.log("Success!")
+        }).catch((err) => {
+            console.log(err);
+        });
   }
 
 

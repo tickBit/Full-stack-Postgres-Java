@@ -46,7 +46,6 @@ function MainView() {
         if (isLoggedIn) {
 
             dispatch(fetchPics(token));
-
         } else {
             navigate('/');
         }
