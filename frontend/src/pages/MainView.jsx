@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {useNavigate} from 'react-router';
 import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
@@ -15,11 +15,23 @@ function MainView() {
     const dispatch = useDispatch();
 
     const { isLoggedIn, username, token } = useAuth();
-
+    const [ menuVisible, setMenuVisible ] = useState(false);
+    const [ picId, setPicId ] = useState(-1);
     const { pics, isLoading } = useSelector((state) => state.pic);
-    
-    async function deletePic(e, id) {
-        if (!isLoggedIn) return;
+
+    const toggleMenu = (id) => {
+        setPicId(id);
+        setMenuVisible(!menuVisible);
+    };
+
+    const cancel = () => {
+        setPicId(-1);
+        setMenuVisible(false);
+    };
+
+    async function deletePic(id) {
+        
+        if (!isLoggedIn) return;            
 
             await axios.delete(`http://localhost:8080/api/deletePic/${id}`, {
                 headers: {
@@ -67,26 +79,36 @@ function MainView() {
 
                     <div className='picture-area'>
 
-                    {!isLoading ? (<div>
+                    {!isLoading ? (<>
 
                         {pics.length > 0 ? (
                                 pics.map((picture) => {
                                                     
                                         return (<div className='picture' key={'_'+picture.id}>
-                                            <p onClick={(e) => deletePic(e, picture.id)} className='close'>Delete picture</p>
-                                            <img src={`data:image/jpeg;base64,${picture.image}`} width="350" height="350" alt={`Image: ${picture.fileName}`} />
-                                            <p>{picture.description}</p>
-                                        </div>);
-                                        }
-                                    )
-                                ) : (
-                                    <p>No images</p>
-                                )
-                            }
-                            </div>
-                       ) : (<Spinner />)
+                                            {menuVisible && picId === picture.id ? (
+                                                <div key={'__'+picture.id}>
+                                                <p onClick={cancel} className='cancel'>Cancel</p>
+                                                <p onClick={() => deletePic(picture.id)} className='close'>Confirm delete picture</p>
+                                                <img src={`data:image/jpeg;base64,${picture.image}`} width="350" height="350" alt='' />
+                                                <p>{picture.description}</p>
+                                                </div>
+                                            ) : (
+                                                <div key={'__'+picture.id}>
+                                                <p onClick={() => toggleMenu(picture.id)} className='close'>Delete picture</p>
+                                                <img src={`data:image/jpeg;base64,${picture.image}`} width="350" height="350" alt='' />
+                                                <p>{picture.description}</p>
+                                                </div>
+                                                )}
+                                            
+                                    </div>)}
+                                )) : ( <p>No images</p> )
+                                
+                            
+                            
+                        }</>   ) : (<Spinner />)
                     }
-                    </div></div>
+                    </div>
+                    </div>
                     ) : (<PleaseLogin />)}
                     </div>
             

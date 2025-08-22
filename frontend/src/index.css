@@ -90,6 +90,12 @@ a {
   color: red;
 }
 
+.cancel {
+  cursor: pointer;
+  color: rgb(49, 176, 49);
+  padding-right: 1em;
+}
+
 .picCntent {
   width: 70%;
   margin: 0 auto;
