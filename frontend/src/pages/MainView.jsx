@@ -22,7 +22,7 @@ function MainView() {
         if (!isLoggedIn) return;
 
         try {
-            const response = await axios.delete(`http://localhost:8080/deletePic/${id}`, {
+            const response = await axios.delete(`http://localhost:8080/api/deletePic/${id}`, {
                 headers: {
                     "Authorization": `Bearer ${token}`,
                 }
@@ -50,6 +50,8 @@ function MainView() {
         if (isLoggedIn) {
 
             dispatch(fetchPics(token));
+            console.log(pics, pics.length);
+
         } else {
             navigate('/');
         }
@@ -73,12 +75,12 @@ function MainView() {
 
                     {!isLoading ? (<div>
 
-                        {pics & pics.length > 0 ? (
+                        {pics.length > 0 ? (
                                 pics.map((picture) => {
                                                     
                                         return (<div className='picture' key={'_'+picture.id}>
                                             <p onClick={(e) => deletePic(e, picture.id)} className='close'>Delete picture</p>
-                                            <img src={`data:image/jpeg;base64,${picture.file_data}`} width="350" height="350" alt={`Image: ${picture.fileName}`} />
+                                            <img src={`data:image/jpeg;base64,${picture.image}`} width="350" height="350" alt={`Image: ${picture.fileName}`} />
                                             <p>{picture.description}</p>
                                         </div>);
                                         }

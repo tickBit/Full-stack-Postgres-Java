@@ -1,5 +1,6 @@
 package com.example.backend.controller;
 
+import com.example.backend.model.Image;
 import com.example.backend.model.User;
 import com.example.backend.service.ImageService;
 import com.example.backend.service.UserService;
@@ -9,10 +10,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:3000") // frontend URL
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true") // frontend URL
 public class ImageController {
 
     private final ImageService imageService;
@@ -37,4 +40,11 @@ public class ImageController {
 
         return ResponseEntity.ok("Upload successful");
     }
+
+    @GetMapping("/getUserPics")
+    public List<Image> getUserPics(Principal p) {
+        String username = p.getName();
+        return imageService.getUserPics(username);
+    }
+    
 }
