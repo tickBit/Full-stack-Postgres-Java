@@ -107,7 +107,7 @@ function MainView() {
                             
                         }</>   ) : (<Spinner />)
                     }
-                    {isError ? <p>Perhaps token expired. Please log out and the log in again</p> : <></>}
+                    {isError ? <p>Perhaps token expired. Please log out and then log in again</p> : <></>}
                     </div>
                     </div>
                     ) : (<PleaseLogin />)}
