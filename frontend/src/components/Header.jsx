@@ -1,3 +1,5 @@
+import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
 import {FaSignInAlt, FaSignOutAlt, FaUser} from 'react-icons/fa';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router';
@@ -11,9 +13,33 @@ function Header() {
   const navigate = useNavigate();
 
   const { isLoggedIn, logout, token } = useAuth();
+  const { isSuccess, isLoading, pics } = useSelector((state) => state.pic);
+  const [ canDelete, setCanDelete ] = useState(false);
 
+
+  useEffect(() => {
+
+    if (!isLoading && isSuccess) {
+    
+      if (pics.length === 0) {
+        setCanDelete(true);
+      } else {
+        setCanDelete(false);
+      }
+
+    } else {
+      setCanDelete(false);
+    }
+    
+
+  }, [pics, isLoading, isSuccess]);
+
+  // Before deleting user's account, check from state, if user has saved pictures;
+  // if the user does, user won't be deleted (this would work without that check too, though)
   const handleDelete = async () => {
-    try {
+    
+    if (canDelete) {
+      try {
         const res = await axios.delete('http://localhost:8080/deleteme', {
           headers: {
                     "Authorization": `Bearer ${token}`,
@@ -26,16 +52,19 @@ function Header() {
           toast("Perhaps the PostgreSQL database isn't running");
           return;
         } else {
-          toast(res.data); // esim. "User deleted"
+          toast(res.data);
           logout();
           navigate('/');
         }
 
 
-    } catch (error) {
+      } catch (error) {
         toast("Deleting user failed. Perhaps there exists images by the user.");
       }
-
+    }
+        toast.error("Please delete your pictures first");
+      
+    
   }
 
   const onLogout = (e) => {
@@ -57,7 +86,7 @@ function Header() {
           </Link>
           </>
           
-          ): (<> <Link onClick={handleDelete} >
+          ): (<> <Link onClick={() => handleDelete()} >
             <span>Delete my account</span>
           </Link>
           <Link onClick={(e) => onLogout(e)}>
@@ -66,8 +95,10 @@ function Header() {
          </>) }
           </div>
 
-          <ToastContainer />
+          <ToastContainer containerId="app-toasts" limit={1} newestOnTop />
+
           <h1>Image Gallery</h1>
+          <p>Please notice, that the access token is set to last ONE MINUTE only!</p>
           
     </header>
 
