@@ -2,6 +2,10 @@ package com.example.backend.config;
 
 
 import com.example.backend.repository.UserRepository;
+
+import jakarta.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Configuration
 public class ApplicationConfiguration {
     private final UserRepository userRepository;
+    
     public ApplicationConfiguration(UserRepository userRepository) {
         this.userRepository = userRepository;
     }

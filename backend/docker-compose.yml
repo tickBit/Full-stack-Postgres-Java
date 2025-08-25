@@ -1,0 +1,31 @@
+services:
+  postgres-db:
+    image: postgres:17.0
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  backend:
+    build: .
+    container_name: backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/mydb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      JWT_SECRET_KEY: supersecretkeyjfahjslhdjlksfhldsafadhflsdfhadslfdhslfhasi48wh4893893938983298fsfuds89f78sf78sf979f87s8f
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres-db
+    restart: no
+
+volumes:
+  postgres-data:
