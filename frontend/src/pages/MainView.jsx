@@ -48,8 +48,11 @@ function MainView() {
                     type: 'pic/deleteOne',
                     payload: id
                 })}).catch((err) => {
+                    if (err.status === 401 || err.status === 403) {
+                        toast.error('Perhaps token expired. Please log out and then log in again');
+                    }
                     console.log(err);
-                })
+                });
             }
 
 
@@ -109,6 +112,9 @@ function MainView() {
                     }
                     {isError ? <p>Perhaps token expired. Please log out and then log in again</p> : <></>}
                     </div>
+
+                    <ToastContainer />
+                    
                     </div>
                     ) : (<PleaseLogin />)}
                     </div>

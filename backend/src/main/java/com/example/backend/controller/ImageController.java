@@ -1,25 +1,24 @@
 package com.example.backend.controller;
 
+import java.io.IOException;
+import java.security.Principal;
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.example.backend.model.Image;
 import com.example.backend.model.User;
 import com.example.backend.service.ImageService;
 import com.example.backend.service.UserService;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import jakarta.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.security.Principal;
-import java.util.List;
 
 
 @RestController
@@ -42,6 +41,7 @@ public class ImageController {
             Principal principal
     ) throws IOException {
 
+        // if token actually is expired, this line isn't even reached
         if (principal == null) return ResponseEntity.status(403).body("Forbidden -- perhaps token expired");
 
         String username = principal.getName();
