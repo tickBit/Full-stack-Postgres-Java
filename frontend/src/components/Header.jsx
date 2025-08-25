@@ -58,7 +58,7 @@ function Header() {
       } catch (err) {
         console.log(err);
       }
-      
+    }
     
   }
 
