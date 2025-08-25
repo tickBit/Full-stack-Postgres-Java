@@ -98,7 +98,7 @@ function Header() {
           <ToastContainer containerId="app-toasts" limit={1} newestOnTop />
 
           <h1>Image Gallery</h1>
-          <p>Please notice, that the access token is set to last TWO MINUTES only!</p>
+          <p>Please notice, that the access token is set to last FIVE MINUTES only!</p>
           
     </header>
 

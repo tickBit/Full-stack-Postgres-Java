@@ -112,11 +112,11 @@ function MainView() {
                     }
                     {isError ? <p>Perhaps token expired. Please log out and then log in again</p> : <></>}
                     </div>
-
-                    <ToastContainer />
                     
                     </div>
                     ) : (<PleaseLogin />)}
+
+                    <ToastContainer containerId="app-toasts" limit={1} newestOnTop />
                     </div>
             
             
