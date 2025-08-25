@@ -40,29 +40,24 @@ function Header() {
     
     if (canDelete) {
       try {
-        const res = await axios.delete('http://localhost:8080/deleteme', {
+        await axios.delete('http://localhost:8080/deleteme', {
           headers: {
                     "Authorization": `Bearer ${token}`,
                     "Content-Type": "multipart/form-data"
                 },
           withCredentials: true },
-        );
-
-        if (res.data === undefined) {
-          toast("Perhaps the PostgreSQL database isn't running");
-          return;
-        } else {
-          toast(res.data);
+        ).then((res) => {
           logout();
           navigate('/');
-        }
-
-
-      } catch (error) {
-        toast("Deleting user failed. Perhaps there exists images by the user.");
+        }).catch((err) => {
+          console.log(err);
+          if (err.status === 401 || err.status === 403) {
+            toast.error('Perhaps token expired. Please log out and then log in again');
+          }
+        });
+      } catch (err) {
+        console.log(err);
       }
-    }
-        toast.error("Please delete your pictures first");
       
     
   }
