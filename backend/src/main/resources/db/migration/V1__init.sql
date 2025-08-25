@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS images (
+    id SERIAL PRIMARY KEY,
+    description TEXT NOT NULL,
+    file_data BYTEA NOT NULL,
+    userid BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE
+);
