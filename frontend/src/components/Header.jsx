@@ -78,7 +78,7 @@ function Header() {
 
           <h1>Image Gallery</h1>
           <p>Please notice, that the access token is set to last TEN MINUTES only!</p>
-          
+          <p>The app uses in-memory authentication: refreshing the page, will log you out.</p>
     </header>
 
     </div>
