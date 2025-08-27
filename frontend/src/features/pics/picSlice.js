@@ -9,9 +9,9 @@ export const fetchPics = createAsyncThunk(
     try {
       const response = await axios.get('http://localhost:8080/api/getUserPics', {
         headers: {
-        "Authorization": `Bearer ${token}`,
+        "Authorization": `Bearer ${token}`
         }
-    })
+    });
       return response.data;
     }
       catch (error) {

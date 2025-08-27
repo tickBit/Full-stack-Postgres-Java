@@ -16,7 +16,7 @@ public class Image {
     private byte[] image;
 
     @ManyToOne
-    @JoinColumn(name = "userid", nullable = false)
+    @JoinColumn(name = "userid", nullable = true)
     private User user;
 
     public Image() {}
@@ -59,5 +59,4 @@ public class Image {
         this.user = user;
     }
 
-    
 }

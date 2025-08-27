@@ -6,7 +6,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-import { AuthProvider } from './AuthContext';
+import { AuthProvider } from './AuthContext.js';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

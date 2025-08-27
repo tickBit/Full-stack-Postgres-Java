@@ -3,6 +3,7 @@ package com.example.backend.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -42,12 +43,10 @@ public class UserService {
 				.orElseThrow();
 	}
 	
-	// signed in user can delete him/herself
-	public void deleteUser(String username) {
-		User user = userRepository.findByUsername(username).orElse(null);
+    public void deleteUser(String username) {
 
-		userRepository.delete(user);
-	}
+        userRepository.deleteByUsernameNative(username);
+    }
 
 	// get particular user
 	public User getUser(String username) {
@@ -56,5 +55,16 @@ public class UserService {
 
     public Iterable<User> getAllUsers() {
 		return userRepository.findAll();		
+	}
+
+	public Authentication authenticate(String username, String password) {
+		try {
+			Authentication auth = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(username, password)
+			);
+			return auth;
+		} catch (Exception e) {
+			return null;
+		}
 	}
 }

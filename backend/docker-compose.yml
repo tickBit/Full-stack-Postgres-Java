@@ -20,7 +20,7 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      JWT_SECRET_KEY: supersecretkeyjfahjslhdjlksfhldsafadhflsdfhadslfdhslfhasi48wh4893893938983298fsfuds89f78sf78sf979f87s8f
+      JWT_SECRET_KEY: TopSecretKeyForMyAndYourAndEveryonesEyesOnlyerittainSalainen
     ports:
       - "8080:8080"
     depends_on:

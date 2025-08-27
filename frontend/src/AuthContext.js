@@ -1,38 +1,55 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+// AuthContext.jsx
+import { createContext, useContext, useState } from "react";
+import axios from "axios";
 
-const AuthContext = createContext();
+// Luodaan konteksti
+const AuthContext = createContext(null);
 
-export const AuthProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') === 'true');
-  const [username, setUsername] = useState(localStorage.getItem('username') || '');
-  const [token, setToken] = useState(localStorage.getItem('token') || '');
 
-  useEffect(() => {
-    localStorage.setItem('isLoggedIn', isLoggedIn.toString());
-    localStorage.setItem('username', username);
-    localStorage.setItem('token', token);
+// Provider
+export function AuthProvider({ children }) {
+  const [token, setToken] = useState(null); // token vain muistissa
+  const [authUsername, setAuthUsername] = useState('');
 
-  }, [isLoggedIn, username, token]);
+  const login = async (username, password) => {
+    await axios.post("http://localhost:8080/auth/login",
+    { username, password },
+      { headers: { "Content-Type": "application/json" } }
+  ).then((res) => {
+        console.log(res);
+        setToken(res.data.token);
+        setAuthUsername(username);
 
-  const login = ( name, token ) => {
-    setIsLoggedIn(true);
-    setUsername(name);
-    setToken(token);
+    }).catch((err) => {
+      throw err;
+    });
   };
 
-  const logout = () => {
-    
-    setIsLoggedIn(false);
-    setUsername('');
-    setToken('');
+const register = async (username, email, password) => {
+    await axios.post("http://localhost:8080/auth/register",
+    { username, email, password },
+      { headers: { "Content-Type": "application/json" } }
+    ).then((res) => {
+        console.log(res);
+        setToken(res.data);
+        setAuthUsername(username);
 
+    }).catch((err) => {
+      throw err;
+    });
+  };
+
+
+  const logout = () => {
+    setToken(null);
+    setAuthUsername('');
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, username, token, login, logout }}>
+    <AuthContext.Provider value={{ token, authUsername, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );
-};
-
+}
+// Custom hook
 export const useAuth = () => useContext(AuthContext);

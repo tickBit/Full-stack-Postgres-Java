@@ -36,4 +36,13 @@ public class ImageService {
     public void deletePicById(Long id) {
         imageRepository.deleteById(id);
     }
+
+    public void deleteUserImages(String username) {
+        User user = userRepository.findByUsername(username).orElse(null);
+        if (user != null) {
+            List<Image> images = imageRepository.findByUserId(user.getId());
+            imageRepository.deleteAll(images);
+        }
+    }
+    
 }

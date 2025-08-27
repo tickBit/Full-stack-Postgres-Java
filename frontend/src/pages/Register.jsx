@@ -1,15 +1,15 @@
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
-import { useAuth } from '../AuthContext';
+import { useAuth } from "../AuthContext.js";
 
 function Register() {
 
+    const { register } = useAuth();
+
     const navigate = useNavigate();
-    
-    const { login } = useAuth();
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
@@ -25,24 +25,12 @@ function Register() {
         }
 
         try {
-            const response = await axios.post(`http://localhost:8080/auth/register`, {
-                username,
-                password,
-                email}, {
-                  headers: { "Content-Type": "application/json" }
-                });
-            
-            // Handle successful registration
-            // log in after successful registration
-            login(username, response.data.token);
-
-            navigate('/');
-
+          await register(username, email, password);
         } catch (err) {
-            setError(err.message);
-            console.error("Registration error:", err);
-            toast("Registration failed!\nPerhaps a user exists by that username");
+          toast.error("Error! Perhaps the user already exists in the database.");
+          setError(err.status);
         }
+        navigate('/');
     }
 
     useEffect(() => {
@@ -52,14 +40,13 @@ function Register() {
 
   return (
     <div className="page">
-        <ToastContainer />
 
         <h2>Register</h2>
         <div className="login-register">
 
         <div className="card bg-glass">
           <div className="card-body px-4 py-5 px-md-5">
-            <form onSubmit={handleRegister}>          
+            <form onSubmit={(e) => handleRegister(e)}>          
                   <div data-mdb-input-init className="form-outline">
                     <input type="text" id="username" name="username" value={username} onChange={(e) => setUsername(e.target.value)} required className="form-control" />
                     <label className="form-label" htmlFor="username">Username</label>

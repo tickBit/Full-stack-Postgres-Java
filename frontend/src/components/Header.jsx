@@ -1,6 +1,5 @@
 import { useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
-import {FaSignInAlt, FaSignOutAlt, FaUser} from 'react-icons/fa';
+import { FaSignInAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router';
 import axios from 'axios';
@@ -12,41 +11,26 @@ function Header() {
 
   const navigate = useNavigate();
 
-  const { isLoggedIn, logout, token } = useAuth();
-  const { isSuccess, isLoading, pics } = useSelector((state) => state.pic);
-  const [ canDelete, setCanDelete ] = useState(false);
-
-
-  useEffect(() => {
-
-    if (!isLoading && isSuccess) {
-    
-      if (pics.length === 0) {
-        setCanDelete(true);
-      } else {
-        setCanDelete(false);
-      }
-
-    } else {
-      setCanDelete(false);
-    }
-    
-
-  }, [pics, isLoading, isSuccess]);
+  const { logout, token } = useAuth();
+  const { pics } = useSelector((state) => state.pic);
 
   // Before deleting user's account, check from state, if user has saved pictures;
   // if the user does, user won't be deleted (this would work without that check too, though)
-  const handleDelete = async () => {
-    
-    if (canDelete) {
-      try {
-        await axios.delete('http://localhost:8080/deleteme', {
+  const handleDelete = async (e) => {
+    e.preventDefault();
+  
+    if (pics.length > 0) {
+      toast.error("You have saved pictures. Please delete them first before deleting your account.");
+      return;
+    }
+      
+    await axios.delete('http://localhost:8080/api/deleteme', {
           headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "multipart/form-data"
-                },
-          withCredentials: true },
+                    'Authorization': `Bearer ${token}`
+                   }
+                  }
         ).then((res) => {
+          console.log(res);
           logout();
           navigate('/');
         }).catch((err) => {
@@ -55,12 +39,12 @@ function Header() {
             toast.error('Perhaps token expired. Please log out and then log in again');
           }
         });
-      } catch (err) {
-        console.log(err);
-      }
+      //} catch (err) {
+      //  console.log(err);
+      //}
     }
     
-  }
+  
 
   const onLogout = (e) => {
     console.log("Log out!");
@@ -72,7 +56,7 @@ function Header() {
 
     <header className='header'>
           <div className='menu'>
-          {!isLoggedIn ? (<>
+          {!token ? (<>
           <Link to="/register">
             <span>Register</span>
           </Link>
@@ -81,7 +65,7 @@ function Header() {
           </Link>
           </>
           
-          ): (<> <Link onClick={() => handleDelete()} >
+          ): (<> <Link onClick={(e) => handleDelete(e)} >
             <span>Delete my account</span>
           </Link>
           <Link onClick={(e) => onLogout(e)}>
@@ -90,10 +74,10 @@ function Header() {
          </>) }
           </div>
 
-          <ToastContainer containerId="app-toasts" limit={1} newestOnTop />
+          <ToastContainer limit={1} newestOnTop />
 
           <h1>Image Gallery</h1>
-          <p>Please notice, that the access token is set to last FIVE MINUTES only!</p>
+          <p>Please notice, that the access token is set to last TEN MINUTES only!</p>
           
     </header>
 

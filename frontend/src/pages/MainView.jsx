@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import {useNavigate} from 'react-router';
 import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 import { fetchPics, reset } from '../features/pics/picSlice'; // import the thunk
 import UploadForm from '../components/UploadForm';
@@ -16,10 +16,10 @@ function MainView() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const { isLoggedIn, username, token } = useAuth();
+    const { token, authUsername } = useAuth();
     const [ menuVisible, setMenuVisible ] = useState(false);
     const [ picId, setPicId ] = useState(-1);
-    const { pics, isLoading, isError } = useSelector((state) => state.pic);
+    const { pics, isLoading } = useSelector((state) => state.pic);
 
     const toggleMenu = (id) => {
         setPicId(id);
@@ -33,7 +33,7 @@ function MainView() {
 
     async function deletePic(id) {
         
-        if (!isLoggedIn) return;            
+        if (!token) return;            
 
             await axios.delete(`http://localhost:8080/api/deletePic/${id}`, {
                 headers: {
@@ -57,8 +57,8 @@ function MainView() {
 
 
     useEffect(() => {
-        
-        if (isLoggedIn) {
+    
+        if (authUsername) {
             dispatch(fetchPics(token));
             
         } else {
@@ -70,57 +70,54 @@ function MainView() {
             dispatch(reset())
         }
 
-    }, [isLoggedIn, navigate, dispatch, token]);
+    }, [navigate, dispatch, token, authUsername]);
 
     return (
         <div className="page">
-            {isLoggedIn ? (
-               <div>
-                    <h2>Main page for user {username}</h2>
+            {token !== null ? (
+                <div>
+                    <h2>Main page for user {authUsername}</h2>
 
                     <UploadForm />
 
                     <div className='picture-area'>
-
-                    {!isLoading ? (<>
-
-                        {pics.length > 0 ? (
-                                pics.map((picture) => {
-                                                    
-                                        return (<div className='picture' key={'_'+picture.id}>
+                        {!isLoading ? (
+                            <div>
+                                {pics.length > 0 ? (
+                                    pics.map((picture) => (
+                                        <div className='picture' key={'_' + picture.id}>
                                             {menuVisible && picId === picture.id ? (
-                                                <div key={'__'+picture.id}>
-                                                <p onClick={cancel} className='cancel'>Cancel</p>
-                                                <p onClick={() => deletePic(picture.id)} className='close'>Confirm delete picture</p>
-                                                <img src={`data:image/jpeg;base64,${picture.image}`} width="350" height="350" alt='' />
-                                                <p>{picture.description}</p>
+                                                <div key={'__' + picture.id}>
+                                                    <p onClick={cancel} className='cancel'>Cancel</p>
+                                                    <p onClick={() => deletePic(picture.id)} className='close'>Confirm delete picture</p>
+                                                    <img src={`data:image/jpeg;base64,${picture.image}`} width="350" height="350" alt='' />
+                                                    <p>{picture.description}</p>
                                                 </div>
                                             ) : (
-                                                <div key={'__'+picture.id}>
-                                                <p onClick={() => toggleMenu(picture.id)} className='close'>Delete picture</p>
-                                                <img src={`data:image/jpeg;base64,${picture.image}`} width="350" height="350" alt='' />
-                                                <p>{picture.description}</p>
+                                                <div key={'__' + picture.id}>
+                                                    <p onClick={() => toggleMenu(picture.id)} className='close'>Delete picture</p>
+                                                    <img src={`data:image/jpeg;base64,${picture.image}`} width="350" height="350" alt='' />
+                                                    <p>{picture.description}</p>
                                                 </div>
-                                                )}
-                                            
-                                    </div>)}
-                                )) : ( <p>No images</p> )
-                                
-                            
-                            
-                        }</>   ) : (<Spinner />)
-                    }
-                    {isError ? <p>Perhaps token expired. Please log out and then log in again</p> : <></>}
+                                            )}
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p>No images.</p>
+                                )}
+                            </div>
+                        ) : (
+                            <p>Perhaps token expired. Please log out and then log in again</p>
+                        )}
                     </div>
-                    
-                    </div>
-                    ) : (<PleaseLogin />)}
 
-                    <ToastContainer containerId="app-toasts" limit={1} newestOnTop />
-                    </div>
-            
-            
-        );}
+                </div>
+            ) : (
+                <PleaseLogin />
+            )}
+        </div>
+    )
+}
                
 
             

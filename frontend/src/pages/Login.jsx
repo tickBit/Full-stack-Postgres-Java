@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from 'react-router';
-import { ToastContainer, toast } from 'react-toastify';
-import axios from "axios";
+import { toast } from 'react-toastify';
 
-import { useAuth } from '../AuthContext';
+import { useAuth } from "./../AuthContext.js";
 
 function Login() {
 
@@ -11,32 +10,24 @@ function Login() {
     
     const { login } = useAuth();
 
+
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
     const handleLogin = async (e) => {
         e.preventDefault();
 
-        if (!username || !password) {
-            toast("Username and password are required");
-            return;
+        try {
+            await login(username, password);
+        } catch (err) {
+            console.error(err.status);
+            toast.error("Login failed. Please check your credentials.\nPerhaps the user does not exist in the database.");
         }
 
-            try {
-                const response = await axios.post(`http://localhost:8080/auth/login`, {
-                                username: username,
-                                password: password
-                                });
+        navigate('/');
+    }
 
-                login(username, response.data.token);
-
-                navigate('/');
-            } catch (error) {
-                console.log("Unauthorized: Invalid credentials.", error.message);
-                toast("Invalid user credentials (probably, maybe).");
-            }
-            };
-    
   return (
     <div className="page">
         <h2>Log in</h2>
@@ -45,7 +36,7 @@ function Login() {
         <div className="card bg-glass">
           <div className="card-body px-4 py-5 px-md-5">
 
-        <form onSubmit={handleLogin}>
+        <form onSubmit={(e) => handleLogin(e)}>
 
     <div data-mdb-input-init className="form-outline mb-4">
         <input type="text" id="username" name="username" value={username} onChange={(e) => setUsername(e.target.value)} required className="form-control" />
@@ -59,7 +50,6 @@ function Login() {
 
     <button type="submit" data-mdb-button-init data-mdb-ripple-init className="btn btn-primary btn-block mb-4">Sign in</button>
 
-    <ToastContainer />
     </form>
     </div>
     </div>

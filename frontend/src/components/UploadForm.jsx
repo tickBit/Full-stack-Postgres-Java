@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 
@@ -68,13 +68,13 @@ function UploadForm() {
                 "Authorization": `Bearer ${token}`
                 }
             }
-        ).then(res => {
+        ).then((res) => {
             console.log(res.data);
             dispatch(uploadPic(res.data));
-            console.log("Success!")
+            console.log("Success!");
         }).catch((err) => {
             if (err.status === 401 || err.status === 403) {
-                toast("Token expired! Please log out and then log in again.")
+                toast.error("Token expired! Please log out and then log in again.")
             }
             console.log(err);
         });
@@ -102,8 +102,6 @@ return (<>
 </div>
 
 </form>
-
-<ToastContainer />
 
 </section>
 </>);
