@@ -65,7 +65,8 @@ public class UserController {
       String jwtToken = jwtService.generateToken(user2);
       LoginResponse loginResponse = new LoginResponse();
       loginResponse.setToken(jwtToken);
-		  return ResponseEntity.ok(jwtToken);
+      loginResponse.setTokenExpireTime(jwtService.getExpirationTime());
+		  return ResponseEntity.ok(loginResponse);
 		
 	}
 
